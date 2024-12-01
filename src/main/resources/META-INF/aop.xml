@@ -1,0 +1,8 @@
+<!-- AspectJ에서 load-time weaving 사용 시 설정 -->
+<!-- aspect 들이 위치한 디렉토리와, 주입 대상 타켓들이 위치한 디렉토리를 include 한다 -->
+<aspectj>
+    <aspects>
+        <aspect name="com.example.crosscutting.demo.common.db.aop.SecureDataAspect"/>
+
+    </aspects>
+</aspectj>
