@@ -1,5 +1,6 @@
 package com.example.crosscutting.demo.config.security;
 
+import com.example.crosscutting.demo.common.tenant.RoleType;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -25,6 +26,7 @@ public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthen
                 extractName(source),
                 extractUserId(source),
                 source.getTokenValue(),
+                isSystemAdmin(grantedAuthorities),
                 extractTenant(source),
                 grantedAuthorities);
     }
@@ -52,6 +54,10 @@ public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthen
     }
     private String extractName(Jwt jwt){
         return jwt.getClaim("name");
+    }
+
+    private boolean isSystemAdmin(Collection<? extends GrantedAuthority> grantedAuthorities){
+        return grantedAuthorities.stream().anyMatch(a -> RoleType.SYSTEM_ADMIN.getType().equals(a.getAuthority()));
     }
 
     /**

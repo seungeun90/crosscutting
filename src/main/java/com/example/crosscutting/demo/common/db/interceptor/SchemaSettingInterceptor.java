@@ -54,7 +54,7 @@ public class SchemaSettingInterceptor implements Interceptor {
         }
         if (mapperClass.isAnnotationPresent(Table.class)) {
             Table tableAnnotation = mapperClass.getAnnotation(Table.class);
-            if(Schema.GLOBAL.equals(tableAnnotation.schema())) {
+            if(Schema.SYSTEM.equals(tableAnnotation.schema())) {
                 tenant = dbProperties.getDefaultSchema();
             }
         }

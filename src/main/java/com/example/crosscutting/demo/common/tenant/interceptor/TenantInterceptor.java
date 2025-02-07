@@ -32,12 +32,14 @@ public class TenantInterceptor implements HandlerInterceptor {
         }
         try {
             CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-            if(authentication.getTenant() == null ||
-                    !StringUtils.hasText(authentication.getTenant().code())){
-                throw new RuntimeException("고객 식별에 실패하였습니다.");
+            if(!authentication.isSystemAdmin()){
+                if(authentication.getTenant() == null ||
+                        !StringUtils.hasText(authentication.getTenant().code())){
+                    throw new RuntimeException("고객 식별에 실패하였습니다.");
+                }
+                String code = authentication.getTenant().code();
+                TenantContextHolder.setTenant(code);
             }
-            String code = authentication.getTenant().code();
-            TenantContextHolder.setTenant(code);
         } catch (Exception e) {
             log.error("auth {}" ,e);
             throw e;
