@@ -1,9 +1,15 @@
-# Crosscutting: AOP & Interceptor를 활용한 다중 스키마 및 컬럼 암·복호화 예제
+## AOP & Interceptor를 활용한 다중 스키마 및 컬럼 암·복호화 예제
 
 ## 개요
 이 프로젝트는 Interceptor와 AOP를 사용해 아래 조건을 구현한 예제입니다. 
 - DB 스키마 동적 변경 
 - DB 특정 컬럼 암복호화 공통화
+
+## 기술 스택
+- **Spring Boot**
+- **MyBatis (iBatis)**
+- **AOP (Aspect-Oriented Programming)**
+- **Interceptor (Spring & MyBatis)**
 
 ## 주요 기능
 ### Interceptor 기반 고객사 식별
@@ -192,9 +198,3 @@ public class SecureDataAspect {
         return joinPoint.proceed();
     }
 ```
-
-## 기술 스택
-- **Spring Boot**
-- **MyBatis (iBatis)**
-- **AOP (Aspect-Oriented Programming)**
-- **Interceptor (Spring & MyBatis)**
