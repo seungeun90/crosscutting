@@ -29,7 +29,7 @@ public class SecurityConfiguration {
         http.oauth2ResourceServer(oAuth2ResourceServerConfigurer ->
                 oAuth2ResourceServerConfigurer.jwt(jwtConfigurer ->
                         jwtConfigurer.jwtAuthenticationConverter(
-                                new JwtAuthenticationConverter(Arrays.asList("getClientId()")))));
+                                new JwtAuthenticationConverter(Arrays.asList("oauth2-client-id")))));
 
         List<String> permitGetPath = securityProperties.getPermitGetPath();
         List<String> permitPostPath = securityProperties.getPermitPostPath();

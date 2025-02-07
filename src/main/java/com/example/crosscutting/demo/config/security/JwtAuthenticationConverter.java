@@ -54,6 +54,10 @@ public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthen
         return jwt.getClaim("name");
     }
 
+    /**
+     * 예를 들어 keycloak 을 oauth2-provider로 쓰면
+     * jwt 내 client id를 key로 values를 추출가능
+     * */
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
         var resourceAccess = new HashMap<>(jwt.getClaim("resource_access"));
         var resourceRoles = new ArrayList<>();

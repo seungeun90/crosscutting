@@ -16,7 +16,10 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 
 @Intercepts({
@@ -44,6 +47,11 @@ public class SchemaSettingInterceptor implements Interceptor {
         String queryID = ((MappedStatement) invocation.getArgs()[0]).getId();
         String className = queryID.substring(0, queryID.lastIndexOf("."));
         Class<?> mapperClass = Class.forName(className);
+        try {
+            mapperClass = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         if (mapperClass.isAnnotationPresent(Table.class)) {
             Table tableAnnotation = mapperClass.getAnnotation(Table.class);
             if(Schema.GLOBAL.equals(tableAnnotation.schema())) {
@@ -51,9 +59,22 @@ public class SchemaSettingInterceptor implements Interceptor {
             }
         }
 
-        Connection connection = ((Executor) invocation.getTarget()).getTransaction().getConnection();
-        connection.createStatement().execute("SET search_path TO \"" + tenant + "\"");
+        log.info("DB Connection :: Tenant Code = {} To {}, " , tenant, queryID);
 
-        return invocation.proceed();
+        try {
+            Connection connection = ((Executor) invocation.getTarget()).getTransaction().getConnection();
+            String cmd = dbProperties.getSchemaCmd().replace("${tenant}", tenant);
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(cmd);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error executing schema command for tenant: " + tenant, e);
+        }
+
+        try {
+            return invocation.proceed();
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

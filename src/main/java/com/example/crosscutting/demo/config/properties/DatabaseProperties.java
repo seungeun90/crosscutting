@@ -11,6 +11,6 @@ import java.util.List;
 public class DatabaseProperties {
     private String filePath;
     private String defaultSchema;
-    private List<String> defaultTables;
+    private String schemaCmd;
 
 }
